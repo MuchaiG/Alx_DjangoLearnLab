@@ -27,7 +27,7 @@ except Library.DoesNotExist:
 # Retrieve the librarian for a library
 try:
     library = Library.objects.get(name=library_name)
-    librarian = librarian.objects.get(library=library)  # Access via related_name
+    librarian = Librarian.objects.get(library=library)  # Access via related_name
     print(f"\nLibrarian for {library_name}: {librarian.name}")
 except Library.DoesNotExist:
     print(f"No library found with name {library_name}")
