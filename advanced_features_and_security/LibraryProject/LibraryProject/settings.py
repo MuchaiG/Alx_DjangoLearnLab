@@ -138,6 +138,11 @@ DEBUG = False
 # IMPORTANT: set actual hosts for production
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", "yourdomain.com"]  # update for your deploy
 
+# Redirect all HTTP -> HTTPS
+SECURE_SSL_REDIRECT = True
+# If behind a proxy/load balancer, set this header to detect HTTPS
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 # Prevent clickjacking
 X_FRAME_OPTIONS = "DENY"  # alternatives: 'SAMEORIGIN' depending on embed needs
 
@@ -154,9 +159,9 @@ CSRF_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_SAMESITE = "Lax"
 
 # HSTS (HTTP Strict Transport Security) - enable only if you serve HTTPS
-# SECURE_HSTS_SECONDS = 31536000  # 1 year
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-# SECURE_HSTS_PRELOAD = True
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 
 # Content Security Policy (CSP) — basic safe default; see middleware section below.
 # If you install django-csp, add 'csp' to INSTALLED_APPS and add middleware (shown below).

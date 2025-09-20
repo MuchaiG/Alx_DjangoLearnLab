@@ -29,3 +29,19 @@ This file documents the security configuration and why each setting is used.
 - Manually test access with users in different groups.
 - Use Django tests to assert permission enforcement for critical actions.
 
+
+
+
+HTTPS & Secure Headers review
+-----------------------------
+- HTTPS enforcement: SECURE_SSL_REDIRECT = True ensures all HTTP requests redirected to HTTPS.
+- HSTS: SECURE_HSTS_SECONDS=31536000 with includeSubdomains and preload flags configured; only enabled when HTTPS is stable.
+- Cookie security: SESSION_COOKIE_SECURE and CSRF_COOKIE_SECURE set to True so cookies are sent only over HTTPS.
+- Proxy awareness: SECURE_PROXY_SSL_HEADER set so Django recognizes secure requests behind nginx/load balancer.
+- Clickjacking & MIME sniffing: X_FRAME_OPTIONS="DENY", SECURE_CONTENT_TYPE_NOSNIFF=True.
+- Deployment: Nginx is configured to redirect HTTP to HTTPS and proxy to Django. TLS certs are provided by Let's Encrypt via certbot.
+- Testing: verify redirects and headers using curl; run certbot renew --dry-run to confirm renewal works.
+Potential improvements:
+- Add HTTP Public Key Pinning (HPKP) is deprecated and not recommended.
+- Add multi-layer rate limiting (nginx or CDN) for endpoints like login and search.
+- Consider using a WAF / CDN (Cloudflare, AWS CloudFront) fronting the app for DDoS and extra TLS features.
