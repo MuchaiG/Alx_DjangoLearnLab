@@ -1,22 +1,26 @@
+# bookshelf/forms.py
 from django import forms
 from .models import Book
-from django.core.exceptions import ValidationError
-import datetime
+
+class ExampleForm(forms.Form):
+    """Example form to demonstrate secure input handling."""
+    search_query = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Search books...'}),
+        help_text="Enter the title or keyword to search."
+    )
+
+    def clean_search_query(self):
+        query = self.cleaned_data['search_query']
+        # Sanitize/validate input (extra layer of defense)
+        if any(char in query for char in [';', '--', '"', "'"]):
+            raise forms.ValidationError("Invalid characters in search query.")
+        return query
+
 
 class BookForm(forms.ModelForm):
+    """Secure form for creating or updating Book objects."""
     class Meta:
         model = Book
-        fields = ["title", "author", "published_date", "borrower"]
-
-    def clean_title(self):
-        title = self.cleaned_data.get("title", "").strip()
-        if not title:
-            raise ValidationError("Title cannot be empty.")
-        # further checks: length, disallowed characters, etc.
-        return title
-
-    def clean_published_date(self):
-        date = self.cleaned_data.get("published_date")
-        if date and date > datetime.date.today():
-            raise ValidationError("Published date cannot be in the future.")
-        return date
+        fields = ['title', 'author', 'description']
