@@ -1,5 +1,7 @@
 from django.db import models
-from django.conf import settings   # <- use this instead of importing User directly
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser, BaseUserManager
+   # <- use this instead of importing User directly
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
