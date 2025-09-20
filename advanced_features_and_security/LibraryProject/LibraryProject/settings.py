@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'accounts',
 ]
 
-AUTH_USER_MODEL = 'accounts.CustomUser', 'bookshelf.CustomUser'
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -131,3 +131,40 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# SECURITY: set to False in production. Locally you may keep True during development.
+DEBUG = False
+
+# IMPORTANT: set actual hosts for production
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "yourdomain.com"]  # update for your deploy
+
+# Prevent clickjacking
+X_FRAME_OPTIONS = "DENY"  # alternatives: 'SAMEORIGIN' depending on embed needs
+
+# Enable browser XSS protection and content type sniffing protections
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Use secure cookies (HTTPS only). Requires HTTPS in production.
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Set SameSite to reduce CSRF risks from cross-site requests (Lax or Strict)
+CSRF_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SAMESITE = "Lax"
+
+# HSTS (HTTP Strict Transport Security) - enable only if you serve HTTPS
+# SECURE_HSTS_SECONDS = 31536000  # 1 year
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
+
+# Content Security Policy (CSP) — basic safe default; see middleware section below.
+# If you install django-csp, add 'csp' to INSTALLED_APPS and add middleware (shown below).
+# Example CSP values (adjust to your asset hosts):
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'",)  # add CDN hosts if needed
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")  # avoid 'unsafe-inline' in prod if possible
+CSP_IMG_SRC = ("'self'", "data:")
+CSP_FONT_SRC = ("'self'",)
+CSP_CONNECT_SRC = ("'self'",)
+
