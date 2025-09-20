@@ -1,20 +1,17 @@
 from django.db import models
+from django.conf import settings  # <-- important, use this instead of importing User directly
 
 class Book(models.Model):
-    """
-    A model to represent a book in the bookshelf application.
-    
-    Fields:
-    - title: The title of the book.
-    - author: The author of the book.
-    - publication_year: The year the book was published.
-    """
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
-    publication_year = models.IntegerField()
+    published_date = models.DateField(null=True, blank=True)
+    borrower = models.ForeignKey(
+        settings.AUTH_USER_MODEL,   # <-- this points to accounts.CustomUser
+        on_delete=models.SET_NULL,
+        null=True, 
+        blank=True,
+        related_name="borrowed_books"
+    )
 
     def __str__(self):
-        """
-        Returns a string representation of the Book object.
-        """
-        return f"{self.title} by {self.author} ({self.publication_year})"
+        return self.title
