@@ -4,6 +4,7 @@ from django.utils import timezone
 from .models import Book
 from .serializers import BookSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 
 # List all books – anyone can view
 class BookListView(generics.ListAPIView):
@@ -12,10 +13,11 @@ class BookListView(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]  # Public access
 
     # Add search and ordering filters
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['title', 'author__name', 'publication_year']  # filter by title, author name, year
     search_fields = ['title', 'author__name']  # search by book title or author name
-    ordering_fields = ['publication_year']     # allow ordering by year
-
+    ordering_fields = ['title', 'publication_year']     # allow ordering by title and year
+    ordering = ['publication_year']  # default ordering
 
 # Retrieve single book – anyone can view
 class BookDetailView(generics.RetrieveAPIView):
